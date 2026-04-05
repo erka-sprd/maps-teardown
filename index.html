@@ -242,9 +242,9 @@
       flex-shrink: 0;
     }
 
-    .presenter-slot.prev  { flex: 1.2; }
-    .presenter-slot.curr  { flex: 3; cursor: default; }
-    .presenter-slot.next  { flex: 1.2; }
+    .presenter-slot.prev  { flex: 1; }
+    .presenter-slot.curr  { flex: 1; cursor: default; }
+    .presenter-slot.next  { flex: 1; }
 
     .presenter-slot-inner {
       position: absolute;
@@ -517,32 +517,31 @@
       return slides[index].cloneNode(true);
     }
 
-    function scaleInner(inner, slot) {
-      const sw = slot.offsetWidth;
-      const sh = slot.offsetHeight;
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const scale = Math.min(sw / vw, sh / vh);
-      inner.style.width  = vw + 'px';
-      inner.style.height = vh + 'px';
-      inner.style.transform = `scale(${scale})`;
-      // center
-      inner.style.left = ((sw - vw * scale) / 2) + 'px';
-      inner.style.top  = ((sh - vh * scale) / 2) + 'px';
-    }
-
-    function renderSlot(innerId, slotId, index) {
+function renderSlot(innerId, slotId, index) {
       const inner = document.getElementById(innerId);
       const slot  = document.getElementById(slotId);
       inner.innerHTML = '';
       const clone = cloneSlide(index);
       if (!clone) { slot.style.visibility = 'hidden'; return; }
       slot.style.visibility = 'visible';
-      clone.style.position = 'relative';
-      clone.style.inset = '0';
-      clone.style.transition = 'none';
+
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const sw = slot.offsetWidth;
+      const sh = slot.offsetHeight;
+      const scale = Math.min(sw / vw, sh / vh);
+
+      // inner is full slide size, scaled down
+      inner.style.width  = vw + 'px';
+      inner.style.height = vh + 'px';
+      inner.style.transform = `scale(${scale})`;
+      inner.style.transformOrigin = 'top left';
+      inner.style.left = ((sw - vw * scale) / 2) + 'px';
+      inner.style.top  = ((sh - vh * scale) / 2) + 'px';
+
+      // clone fills the inner div like a real slide
+      clone.style.cssText += ';position:absolute;inset:0;width:' + vw + 'px;height:' + vh + 'px;transition:none;';
       inner.appendChild(clone);
-      scaleInner(inner, slot);
     }
 
     function renderPresenter() {
