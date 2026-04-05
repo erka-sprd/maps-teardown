@@ -61,6 +61,8 @@
     .slide-9 { background: #e8f0eb; }
     .slide-10 { background: #f0ede8; }
     .slide-11 { background: #e8edf0; }
+    .slide-12 { background: #e8edf0; }
+    .slide-13 { background: #e8edf0; }
 
     .slide-split {
       flex-direction: row;
@@ -117,6 +119,33 @@
     .text-size-1 { font-size: clamp(15px, 2vw, 20px); }
     .text-size-2 { font-size: clamp(20px, 3vw, 26px); }
     .text-size-3 { font-size: clamp(30px, 4vw, 36px); }
+
+    video { border-radius: clamp(12px, 2.5vw, 56px); }
+
+    /* ── Slide Focus ── */
+    .focus-section {
+      transition: filter 0.5s ease, opacity 0.5s ease;
+    }
+    .focus-section[data-blurred="true"] {
+      filter: blur(6px);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* Images in focus sections swap with scale + opacity */
+    img.focus-section {
+      transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    img.focus-section[data-blurred="true"] {
+      filter: none;
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+    }
+    img.focus-section[data-blurred="false"] {
+      opacity: 1;
+      transform: scale(1);
+    }
 
     /* Nav button */
     .nav-btn {
@@ -216,95 +245,6 @@
 
     .popover-item.active .popover-item-dot { background: #111; }
 
-    /* ── Presenter (mobile) ── */
-    @media (max-width: 768px) {
-      .slides, .nav-btn, .popover { display: none !important; }
-      .presenter { display: flex; }
-    }
-
-    @media (min-width: 769px) {
-      .presenter { display: none !important; }
-    }
-
-    .presenter {
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      background: #1a1a1a;
-      gap: 3px;
-    }
-
-    .presenter-slot {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .presenter-slot.prev  { flex: 1; }
-    .presenter-slot.curr  { flex: 1; cursor: default; }
-    .presenter-slot.next  { flex: 1; }
-
-    .presenter-slot-inner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      transform-origin: top left;
-      pointer-events: none;
-    }
-
-    .presenter-slot.prev::after,
-    .presenter-slot.next::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.25);
-      pointer-events: none;
-    }
-
-    .presenter-slot.prev::before {
-      content: '↑';
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      color: rgba(255,255,255,0.5);
-      font-size: 18px;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .presenter-slot.next::before {
-      content: '↓';
-      position: absolute;
-      bottom: 8px;
-      right: 12px;
-      color: rgba(255,255,255,0.5);
-      font-size: 18px;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    @media (min-width: 769px) {
-      .presenter-nav-btn { display: none !important; }
-    }
-
-    .presenter-nav-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 16px;
-      z-index: 100;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 999px;
-      padding: 6px 14px;
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.8);
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -482,74 +422,60 @@
       <p class="text-size-2" style="color: #555; max-width: 640px; text-align: center; line-height: 1.5; font-style: italic;">"I want to meet with my friend at a park on Saturday"</p>
     </div>
 
-  </div>
+    <div class="slide slide-12 slide-split" data-index="11" data-title="Journey 1: Push & Pull" data-slide-focus="true" data-focus-step="0" data-focus-total="2">
+      <div class="split-left" style="gap: 28px;">
+        <div class="focus-section" data-focus-index="0">
+          <h1>Journey 1</h1>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
+            <span class="text-size-1" style="font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.08em;">Push</span>
+            <p class="text-size-2" style="color: #333; font-style: italic; line-height: 1.5;">"It's Friday and I want to plan for tomorrow when I should leave home to arrive at around 13:45 – 14:00" <span style="color: #aaa; font-style: normal;">— No hurry, but I want to plan how long earlier I should prepare.</span></p>
+          </div>
+        </div>
+        <div class="focus-section" data-focus-index="1" data-blurred="true">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <span class="text-size-1" style="font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.08em;">Pulls</span>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
+              <li class="text-size-2" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Leave/Arrive feature</li>
+              <li class="text-size-2" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Strike or out of order alerts</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="split-right focus-section" data-focus-index="2" data-blurred="true" style="padding: 32px;">
+        <video controls style="max-width: 100%; max-height: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.12);">
+          <source src="leavearrive_h264.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
 
-  <div class="presenter" id="presenter">
-    <div class="presenter-slot prev" id="pPrev" onclick="goTo(current - 1)">
-      <div class="presenter-slot-inner" id="pPrevInner"></div>
+    <div class="slide slide-13 slide-split" data-index="12" data-title="Journey 1: Alert during transfer" data-slide-focus="true" data-focus-step="0" data-focus-total="2">
+      <div class="split-left" style="gap: 16px;">
+        <h1>Journey 1</h1>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
+          <li class="focus-section text-size-2" data-focus-index="0" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Alert during the transfer</li>
+          <li class="focus-section text-size-2" data-focus-index="1" data-blurred="true" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Boarding</li>
+          <li class="focus-section text-size-2" data-focus-index="2" data-blurred="true" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Exit direction</li>
+        </ul>
+      </div>
+      <div class="split-right" style="padding: 32px;">
+        <img class="focus-section" data-focus-index="0" src="journey1change.jpg" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); transition: opacity 0.5s ease;" />
+        <img class="focus-section" data-focus-index="1" data-blurred="true" src="journey1-boarding.jpg" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); transition: opacity 0.5s ease;" />
+        <img class="focus-section" data-focus-index="2" data-blurred="true" src="journey1-exit.jpg" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); transition: opacity 0.5s ease;" />
+      </div>
     </div>
-    <div class="presenter-slot curr" id="pCurr">
-      <div class="presenter-slot-inner" id="pCurrInner"></div>
-    </div>
-    <div class="presenter-slot next" id="pNext" onclick="goTo(current + 1)">
-      <div class="presenter-slot-inner" id="pNextInner"></div>
-    </div>
+
   </div>
-  <button class="presenter-nav-btn" id="presenterNavBtn">1 / 11</button>
 
   <div class="popover" id="popover"></div>
-  <button class="nav-btn" id="navBtn">1 / 11</button>
+  <button class="nav-btn" id="navBtn">1 / 13</button>
 
   <script>
     const slides = Array.from(document.querySelectorAll('.slide'));
     const navBtn = document.getElementById('navBtn');
-    const presenterNavBtn = document.getElementById('presenterNavBtn');
     const popover = document.getElementById('popover');
     let current = parseInt(sessionStorage.getItem('slide') || '0', 10);
     if (current >= slides.length) current = 0;
     let popoverOpen = false;
-
-    // ── Presenter ──
-    const isMobile = () => window.innerWidth <= 768;
-
-    function cloneSlide(index) {
-      if (index < 0 || index >= slides.length) return null;
-      return slides[index].cloneNode(true);
-    }
-
-function renderSlot(innerId, slotId, index) {
-      const inner = document.getElementById(innerId);
-      const slot  = document.getElementById(slotId);
-      inner.innerHTML = '';
-      const clone = cloneSlide(index);
-      if (!clone) { slot.style.visibility = 'hidden'; return; }
-      slot.style.visibility = 'visible';
-
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const sw = slot.offsetWidth;
-      const sh = slot.offsetHeight;
-      const scale = Math.min(sw / vw, sh / vh);
-
-      // inner is full slide size, scaled down
-      inner.style.width  = vw + 'px';
-      inner.style.height = vh + 'px';
-      inner.style.transform = `scale(${scale})`;
-      inner.style.transformOrigin = 'top left';
-      inner.style.left = ((sw - vw * scale) / 2) + 'px';
-      inner.style.top  = ((sh - vh * scale) / 2) + 'px';
-
-      // clone fills the inner div like a real slide
-      clone.style.cssText += ';position:absolute;inset:0;width:' + vw + 'px;height:' + vh + 'px;transition:none;';
-      inner.appendChild(clone);
-    }
-
-    function renderPresenter() {
-      renderSlot('pPrevInner', 'pPrev', current - 1);
-      renderSlot('pCurrInner', 'pCurr', current);
-      renderSlot('pNextInner', 'pNext', current + 1);
-      presenterNavBtn.textContent = `${current + 1} / ${slides.length}`;
-    }
 
     function buildPopover() {
       popover.innerHTML = slides.map((slide, i) => `
@@ -579,34 +505,80 @@ function renderSlot(innerId, slotId, index) {
 
     document.addEventListener('click', () => closePopover());
 
+    function saveFocusState(slide) {
+      sessionStorage.setItem('focus_' + slide.dataset.index, slide.dataset.focusStep);
+    }
+
+    function applyFocusStep(slide, step) {
+      slide.dataset.focusStep = step;
+      slide.querySelectorAll('.focus-section[data-focus-index]').forEach(s => {
+        const idx = parseInt(s.dataset.focusIndex);
+        if (s.tagName === 'IMG') {
+          s.dataset.blurred = idx === step ? 'false' : 'true';
+        } else {
+          s.dataset.blurred = idx > step ? 'true' : 'false';
+        }
+      });
+    }
+
+    function advanceFocus(slide) {
+      const step = parseInt(slide.dataset.focusStep);
+      const total = parseInt(slide.dataset.focusTotal);
+      if (step < total) {
+        applyFocusStep(slide, step + 1);
+        saveFocusState(slide);
+        return true;
+      }
+      return false;
+    }
+
+    function resetFocus(slide) {
+      applyFocusStep(slide, 0);
+      saveFocusState(slide);
+    }
+
     function goTo(next) {
       if (next < 0 || next >= slides.length || next === current) return;
+      const leaving = slides[current];
+      if (leaving.dataset.slideFocus) resetFocus(leaving);
       slides[current].dataset.state = next > current ? 'before' : 'after';
       slides[next].dataset.state = 'active';
       current = next;
       sessionStorage.setItem('slide', current);
       navBtn.textContent = `${current + 1} / ${slides.length}`;
-      if (isMobile()) renderPresenter();
     }
 
     // Init states
     slides.forEach((slide, i) => {
       slide.dataset.state = i === current ? 'active' : i < current ? 'before' : 'after';
+      if (slide.dataset.slideFocus) {
+        const saved = parseInt(sessionStorage.getItem('focus_' + slide.dataset.index) || '0');
+        applyFocusStep(slide, saved);
+      }
     });
     navBtn.textContent = `${current + 1} / ${slides.length}`;
 
-    if (isMobile()) {
-      // Small delay to let slots lay out before measuring
-      requestAnimationFrame(() => requestAnimationFrame(renderPresenter));
+    function retreatFocus(slide) {
+      const step = parseInt(slide.dataset.focusStep);
+      if (step > 0) {
+        applyFocusStep(slide, step - 1);
+        saveFocusState(slide);
+        return true;
+      }
+      return false;
     }
 
-    window.addEventListener('resize', () => {
-      if (isMobile()) renderPresenter();
-    });
-
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown') goTo(current + 1);
-      if (e.key === 'ArrowUp') goTo(current - 1);
+      if (e.key === 'ArrowDown') {
+        const slide = slides[current];
+        if (slide.dataset.slideFocus && advanceFocus(slide)) return;
+        goTo(current + 1);
+      }
+      if (e.key === 'ArrowUp') {
+        const slide = slides[current];
+        if (slide.dataset.slideFocus && retreatFocus(slide)) return;
+        goTo(current - 1);
+      }
       if (e.key === 'Escape') closePopover();
     });
   </script>
