@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slides</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .slides {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.7s ease;
+    }
+
+    .slide[data-state="before"] {
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .slide[data-state="active"] {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .slide[data-state="after"] {
+      transform: translateY(100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .slide-1 { background: #f0ede8; }
+    .slide-2 { background: #e8edf0; }
+    .slide-3 { background: #ede8f0; }
+    .slide-4 { background: #e8f0eb; }
+    .slide-5 { background: #e8f0eb; }
+    .slide-6 { background: #e8f0eb; }
+    .slide-7 { background: #e8f0eb; }
+    .slide-8 { background: #e8f0eb; }
+    .slide-9 { background: #e8f0eb; }
+    .slide-10 { background: #f0ede8; }
+    .slide-11 { background: #e8edf0; }
+
+    .slide-split {
+      flex-direction: row;
+      align-items: stretch;
+      justify-content: flex-start;
+      gap: 0;
+      padding: 0;
+    }
+
+    .slide-split .split-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px 48px;
+      gap: 24px;
+    }
+
+    .slide-split .split-left h1 {
+      text-align: left;
+      margin-bottom: 0;
+    }
+
+    .slide-split .split-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.04);
+      border-left: 1px solid rgba(0,0,0,0.06);
+      color: #bbb;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .slide h1 {
+      font-size: clamp(28px, 5vw, 56px);
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 24px;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .slide p {
+      font-size: clamp(15px, 2vw, 20px);
+      color: #555;
+      max-width: 640px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .text-size-1 { font-size: clamp(15px, 2vw, 20px); }
+    .text-size-2 { font-size: clamp(20px, 3vw, 26px); }
+    .text-size-3 { font-size: clamp(30px, 4vw, 36px); }
+
+    /* Nav button */
+    .nav-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 40px;
+      z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-btn:hover { background: rgba(255,255,255,1); color: #111; }
+
+    /* Popover */
+    .popover {
+      position: fixed;
+      bottom: 72px;
+      right: 40px;
+      z-index: 200;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+      padding: 8px;
+      min-width: 200px;
+      max-height: 60vh;
+      overflow-y: auto;
+      transform-origin: bottom right;
+      transform: scale(0.92) translateY(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
+    }
+
+    .popover.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .popover-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      background: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.1s;
+    }
+
+    .popover-item:hover { background: rgba(0,0,0,0.05); }
+
+    .popover-item.active { background: rgba(0,0,0,0.06); }
+
+    .popover-item-number {
+      font-size: 11px;
+      font-weight: 600;
+      color: #bbb;
+      width: 18px;
+      flex-shrink: 0;
+    }
+
+    .popover-item.active .popover-item-number { color: #111; }
+
+    .popover-item-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .popover-item.active .popover-item-label { color: #111; font-weight: 600; }
+
+    .popover-item-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: transparent;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    .popover-item.active .popover-item-dot { background: #111; }
+
+    /* ── Presenter (mobile) ── */
+    @media (max-width: 768px) {
+      .slides, .nav-btn, .popover { display: none !important; }
+      .presenter { display: flex; }
+    }
+
+    @media (min-width: 769px) {
+      .presenter { display: none !important; }
+    }
+
+    .presenter {
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      background: #1a1a1a;
+      gap: 3px;
+    }
+
+    .presenter-slot {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .presenter-slot.prev  { flex: 1.2; }
+    .presenter-slot.curr  { flex: 3; cursor: default; }
+    .presenter-slot.next  { flex: 1.2; }
+
+    .presenter-slot-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: top left;
+      pointer-events: none;
+    }
+
+    .presenter-slot.prev::after,
+    .presenter-slot.next::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      pointer-events: none;
+    }
+
+    .presenter-slot.prev::before {
+      content: '↑';
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      color: rgba(255,255,255,0.5);
+      font-size: 18px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .presenter-slot.next::before {
+      content: '↓';
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      color: rgba(255,255,255,0.5);
+      font-size: 18px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    @media (min-width: 769px) {
+      .presenter-nav-btn { display: none !important; }
+    }
+
+    .presenter-nav-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 16px;
+      z-index: 100;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slides" id="slides">
+
+    <div class="slide slide-1" data-index="0" data-title="The Beginning">
+      <h1>Google Maps Teardown</h1>
+    </div>
+
+    <div class="slide slide-2" data-index="1" data-title="Outline">
+      <h1>Outline</h1>
+      <ul style="list-style: none; text-align: left; display: flex; flex-direction: column; gap: 14px; max-width: 560px; width: 100%; margin-top: 8px;">
+        <li class="text-size-2" style="color: #333; display: flex; align-items: center; gap: 12px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Google Maps Business &amp; Monetization Model</li>
+        <li class="text-size-2" style="color: #333; display: flex; align-items: center; gap: 12px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Competitors</li>
+        <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+          <span style="display: flex; align-items: center; gap: 12px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> The Journeys to focus on</span>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; padding-left: 32px;">
+            <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> J1: From A to B</li>
+            <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> J2: Finding a specific place (with preferences)</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="slide slide-3" data-index="2" data-title="Business & Monetization Model">
+      <h1>Business &amp; Monetization Model</h1>
+      <ol style="list-style: none; text-align: left; display: flex; flex-direction: column; gap: 12px; max-width: 640px; width: 100%; margin-top: 8px; counter-reset: item;">
+        <li class="text-size-2" style="color: #333;">1. Advertising <span style="color: #aaa;">(Core revenue engine)</span></li>
+        <li class="text-size-2" style="color: #333;">2. Maps Platform <span style="color: #aaa;">(B2B API business)</span></li>
+        <li class="text-size-2" style="color: #333;">3. Business Listings / Google Business Profile layer</li>
+        <li class="text-size-2" style="color: #333;">4. Transactions &amp; bookings</li>
+        <li class="text-size-2" style="color: #333;">5. Mobility / Navigation / Traffic layer</li>
+        <li class="text-size-2" style="color: #333;">6. Data &amp; AI layer</li>
+      </ol>
+    </div>
+
+    <div class="slide slide-4 slide-split" data-index="3" data-title="Competition">
+      <div class="split-left">
+        <h1>Competition</h1>
+        <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+          <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+            <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Advertising <span style="color: #aaa;">(Core revenue engine)</span></span>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Google Search <span style="color: #aaa; margin-left: 4px;">(internal cannibalization)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Meta <span style="color: #aaa; margin-left: 4px;">(Facebook / Instagram ads)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> TikTok Ads</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Yelp Ads <span style="color: #aaa; margin-left: 4px;">(high-intent local)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Tripadvisor Ads</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+      <div class="split-right">IMAGE / VIDEO</div>
+    </div>
+
+    <div class="slide slide-5 slide-split" data-index="4" data-title="Competition: Maps Platform">
+      <div class="split-left">
+        <h1>Competition</h1>
+        <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+          <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+            <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Maps Platform <span style="color: #aaa;">(B2B API business)</span></span>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Mapbox</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> HERE Technologies</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> TomTom</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> OpenStreetMap <span style="color: #aaa; margin-left: 4px;">(indirect, via ecosystem)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Esri <span style="color: #aaa; margin-left: 4px;">(enterprise GIS)</span></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+      <div class="split-right">IMAGE / VIDEO</div>
+    </div>
+
+    <div class="slide slide-6 slide-split" data-index="5" data-title="Competition: Business Listings">
+      <div class="split-left">
+        <h1>Competition</h1>
+        <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+          <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+            <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Business Listings / Google Business Profile layer</span>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Yelp</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Tripadvisor</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Foursquare</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Apple Maps listings</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Facebook Pages</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Instagram business profiles</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+      <div class="split-right">IMAGE / VIDEO</div>
+    </div>
+
+    <div class="slide slide-7 slide-split" data-index="6" data-title="Competition: Transactions & Bookings">
+      <div class="split-left">
+        <h1>Competition</h1>
+        <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+          <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+            <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Transactions &amp; bookings</span>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> OpenTable / Resy <span style="color: #aaa; margin-left: 4px;">(restaurants)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Booking.com / Airbnb <span style="color: #aaa; margin-left: 4px;">(travel)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Uber / Bolt <span style="color: #aaa; margin-left: 4px;">(rides)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> DoorDash / Uber Eats <span style="color: #aaa; margin-left: 4px;">(food delivery)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> GetYourGuide / Klook <span style="color: #aaa; margin-left: 4px;">(activities)</span></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+      <div class="split-right">IMAGE / VIDEO</div>
+    </div>
+
+    <div class="slide slide-8 slide-split" data-index="7" data-title="Competition: Mobility & Navigation">
+      <div class="split-left">
+        <h1>Competition</h1>
+        <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+          <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+            <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Mobility / Navigation / Traffic layer</span>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Apple Maps</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Regional apps <span style="color: #aaa; margin-left: 4px;">(DeutscheBahn etc.)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Waze <span style="color: #aaa; margin-left: 4px;">(internal but still competing for usage)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Citymapper</li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Moovit</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+      <div class="split-right">IMAGE / VIDEO</div>
+    </div>
+
+    <div class="slide slide-9 slide-split" data-index="8" data-title="Competition: Data & AI">
+      <div class="split-left">
+        <h1>Competition</h1>
+        <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
+          <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+            <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Data &amp; AI layer</span>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Apple <span style="color: #aaa; margin-left: 4px;">(privacy-first mapping stack)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> HERE / TomTom <span style="color: #aaa; margin-left: 4px;">(automotive + enterprise data)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Foursquare <span style="color: #aaa; margin-left: 4px;">(location intelligence)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> Uber <span style="color: #aaa; margin-left: 4px;">(mobility data)</span></li>
+              <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> OpenStreetMap <span style="color: #aaa; margin-left: 4px;">(community-driven data)</span></li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+      <div class="split-right">IMAGE / VIDEO</div>
+    </div>
+
+    <div class="slide slide-10" data-index="9" data-title="Journeys">
+      <h1>Journeys</h1>
+      <ul style="list-style: none; text-align: left; display: flex; flex-direction: column; gap: 20px; max-width: 600px; width: 100%; margin-top: 8px;">
+        <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+          <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span><strong>J1:</strong>&nbsp;From A to B</span>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
+            <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> By using public transport</li>
+            <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> By walking</li>
+          </ul>
+        </li>
+        <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
+          <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span><strong>J2:</strong>&nbsp;Searching for a place</span>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
+            <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> A laptop-friendly cafe</li>
+            <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> A public toilet</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="slide slide-11" data-index="10" data-title="Journey 1">
+      <h1>Journey 1</h1>
+      <p class="text-size-2" style="color: #555; max-width: 640px; text-align: center; line-height: 1.5; font-style: italic;">"I want to meet with my friend at a park on Saturday"</p>
+    </div>
+
+  </div>
+
+  <div class="presenter" id="presenter">
+    <div class="presenter-slot prev" id="pPrev" onclick="goTo(current - 1)">
+      <div class="presenter-slot-inner" id="pPrevInner"></div>
+    </div>
+    <div class="presenter-slot curr" id="pCurr">
+      <div class="presenter-slot-inner" id="pCurrInner"></div>
+    </div>
+    <div class="presenter-slot next" id="pNext" onclick="goTo(current + 1)">
+      <div class="presenter-slot-inner" id="pNextInner"></div>
+    </div>
+  </div>
+  <button class="presenter-nav-btn" id="presenterNavBtn">1 / 11</button>
+
+  <div class="popover" id="popover"></div>
+  <button class="nav-btn" id="navBtn">1 / 11</button>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const navBtn = document.getElementById('navBtn');
+    const presenterNavBtn = document.getElementById('presenterNavBtn');
+    const popover = document.getElementById('popover');
+    let current = parseInt(sessionStorage.getItem('slide') || '0', 10);
+    if (current >= slides.length) current = 0;
+    let popoverOpen = false;
+
+    // ── Presenter ──
+    const isMobile = () => window.innerWidth <= 768;
+
+    function cloneSlide(index) {
+      if (index < 0 || index >= slides.length) return null;
+      return slides[index].cloneNode(true);
+    }
+
+    function scaleInner(inner, slot) {
+      const sw = slot.offsetWidth;
+      const sh = slot.offsetHeight;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const scale = Math.min(sw / vw, sh / vh);
+      inner.style.width  = vw + 'px';
+      inner.style.height = vh + 'px';
+      inner.style.transform = `scale(${scale})`;
+      // center
+      inner.style.left = ((sw - vw * scale) / 2) + 'px';
+      inner.style.top  = ((sh - vh * scale) / 2) + 'px';
+    }
+
+    function renderSlot(innerId, slotId, index) {
+      const inner = document.getElementById(innerId);
+      const slot  = document.getElementById(slotId);
+      inner.innerHTML = '';
+      const clone = cloneSlide(index);
+      if (!clone) { slot.style.visibility = 'hidden'; return; }
+      slot.style.visibility = 'visible';
+      clone.style.position = 'relative';
+      clone.style.inset = '0';
+      clone.style.transition = 'none';
+      inner.appendChild(clone);
+      scaleInner(inner, slot);
+    }
+
+    function renderPresenter() {
+      renderSlot('pPrevInner', 'pPrev', current - 1);
+      renderSlot('pCurrInner', 'pCurr', current);
+      renderSlot('pNextInner', 'pNext', current + 1);
+      presenterNavBtn.textContent = `${current + 1} / ${slides.length}`;
+    }
+
+    function buildPopover() {
+      popover.innerHTML = slides.map((slide, i) => `
+        <button class="popover-item ${i === current ? 'active' : ''}" onclick="goTo(${i}); closePopover();">
+          <span class="popover-item-number">${i + 1}</span>
+          <span class="popover-item-label">${slide.dataset.title || 'Slide ' + (i + 1)}</span>
+          <span class="popover-item-dot"></span>
+        </button>
+      `).join('');
+    }
+
+    function openPopover() {
+      buildPopover();
+      popover.classList.add('open');
+      popoverOpen = true;
+    }
+
+    function closePopover() {
+      popover.classList.remove('open');
+      popoverOpen = false;
+    }
+
+    navBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      popoverOpen ? closePopover() : openPopover();
+    });
+
+    document.addEventListener('click', () => closePopover());
+
+    function goTo(next) {
+      if (next < 0 || next >= slides.length || next === current) return;
+      slides[current].dataset.state = next > current ? 'before' : 'after';
+      slides[next].dataset.state = 'active';
+      current = next;
+      sessionStorage.setItem('slide', current);
+      navBtn.textContent = `${current + 1} / ${slides.length}`;
+      if (isMobile()) renderPresenter();
+    }
+
+    // Init states
+    slides.forEach((slide, i) => {
+      slide.dataset.state = i === current ? 'active' : i < current ? 'before' : 'after';
+    });
+    navBtn.textContent = `${current + 1} / ${slides.length}`;
+
+    if (isMobile()) {
+      // Small delay to let slots lay out before measuring
+      requestAnimationFrame(() => requestAnimationFrame(renderPresenter));
+    }
+
+    window.addEventListener('resize', () => {
+      if (isMobile()) renderPresenter();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') goTo(current + 1);
+      if (e.key === 'ArrowUp') goTo(current - 1);
+      if (e.key === 'Escape') closePopover();
+    });
+  </script>
+
+</body>
+</html>
