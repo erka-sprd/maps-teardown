@@ -78,6 +78,171 @@
     .slide-17 { background: #e8edf0; }
     .slide-18 { background: #e8edf0; }
     .slide-19 { background: #e8edf0; }
+    .slide-20 { background: #f0ede8; }
+    .slide-21 { background: #e8edf0; }
+
+    .complexity-table {
+      width: 70%;
+      border-collapse: collapse;
+      font-size: 20px;
+      margin: 24px auto 0;
+    }
+    .complexity-table th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #aaa;
+      border-bottom: 1.5px solid rgba(0,0,0,0.08);
+    }
+    .complexity-table td {
+      padding: 10px 16px;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      color: #333;
+      line-height: 1.5;
+    }
+    .complexity-table tr:last-child td { border-bottom: none; }
+    .slide-21 .complexity-table tbody tr {
+      transition: background 0.15s ease;
+      cursor: default;
+    }
+    .slide-21 .complexity-table tbody tr:hover td { background: #fffde6; }
+    .complexity-table td:first-child,
+    .complexity-table th:first-child {
+      font-weight: 600;
+      color: #888;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .complexity-table td:last-child,
+    .complexity-table th:last-child {
+      color: #111;
+    }
+
+    .slide-21 .complexity-table td:first-child,
+    .slide-21 .complexity-table th:first-child { width: 50%; }
+
+    .slide-21 .complexity-table td:last-child,
+    .slide-21 .complexity-table th:last-child { width: 50%; }
+
+    .slide-21 .complexity-table { width: 50%; }
+
+    /* slide-21 two-column layout */
+    .slide-21 {
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 48px !important;
+      gap: 0 !important;
+      overflow: hidden;
+    }
+    .slide-21 .slide21-inner {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: margin-right 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    .slide-21[data-focus-step="1"] .slide21-inner {
+      margin-right: 100px;
+    }
+    .slide-21 h1 {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .slide-21[data-focus-step="1"] h1 {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
+    /* right column: slides in from right on focus-step=1 */
+    .slide21-right {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 32px;
+      transform: translateX(120%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.4s ease;
+    }
+    .slide-21[data-focus-step="1"] .slide21-right {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+    /* large preview: slides in from right within the right column */
+    .slide-21 .media-preview {
+      max-width: 0;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: max-width 0.5s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.4s ease;
+    }
+    .slide-21.preview-open .media-preview {
+      max-width: 500px;
+      opacity: 1;
+      pointer-events: all;
+      overflow: inherit;
+    }
+    .slide-21 .media-preview img,
+    .slide-21 .media-preview video {
+      max-height: 70vh;
+      border-radius: 16px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+      display: block;
+      flex-shrink: 0;
+      margin-right: 32px;
+    }
+    /* gallery strip — inline, always visible inside right column */
+    .slide-21 .gallery-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .gallery-strip .thumb-wrap {
+      width: 100px;
+      height: 100px;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .gallery-strip .thumb-wrap img,
+    .gallery-strip .thumb-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .gallery-strip .thumb-wrap.selected {
+      outline: 2.5px solid #111;
+      outline-offset: 2px;
+    }
+    .complexity-table td .sub-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .complexity-table .pill {
+      display: inline-block;
+      font-size: 22px;
+      color: #111;
+      border: 1px solid rgba(0,0,0,0.25);
+      border-radius: 999px;
+      padding: 2px 12px;
+      white-space: nowrap;
+    }
 
     @keyframes floatDown {
       0%   { transform: translateY(-4px); opacity: 0.7; }
@@ -100,12 +265,14 @@
     }
 
     .slide-split .split-left {
-      flex: 1;
+      flex: 0 0 50%;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 80px;
       gap: 24px;
+      padding-left: 200px;
     }
 
     .slide-split .split-left h1 {
@@ -114,7 +281,8 @@
     }
 
     .slide-split .split-right {
-      flex: 1;
+      flex: 0 0 50%;
+      min-width: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -122,6 +290,14 @@
       font-size: 14px;
       font-weight: 500;
       letter-spacing: 0.04em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-split .split-right img,
+    .slide-split .split-right video {
+      max-width: 80% !important;
+      max-height: 70vh !important;
     }
 
     .slide h1 {
@@ -133,6 +309,23 @@
       line-height: 1.15;
     }
 
+    .slide h1.title-default {
+      font-size: clamp(28px, 5vw, 56px);
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 24px;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .slide h1.title-allcaps {
+      font-size: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      opacity: 0.6;
+    }
+
     .slide p {
       font-size: clamp(15px, 2vw, 20px);
       color: #555;
@@ -141,9 +334,9 @@
       line-height: 1.7;
     }
 
-    .text-size-1 { font-size: clamp(15px, 2vw, 20px); }
-    .text-size-2 { font-size: clamp(20px, 3vw, 26px); }
-    .text-size-3 { font-size: clamp(30px, 4vw, 36px); }
+    .slide .text-size-1 { font-size: clamp(15px, 2vw, 20px); }
+    .slide .text-size-2 { font-size: clamp(20px, 3vw, 26px); }
+    .slide .text-size-3 { font-size: clamp(30px, 4vw, 36px); }
 
     video { border-radius: clamp(12px, 2.5vw, 56px); }
 
@@ -231,11 +424,30 @@
     .nav-btn:hover { background: rgba(255,255,255,1); color: #111; }
 
     /* Popover */
+    #popover-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    #popover-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .slides.popover-open {
+      filter: blur(4px);
+      transition: filter 0.2s ease;
+    }
+
     .popover {
       position: fixed;
       bottom: 72px;
       right: 40px;
-      z-index: 200;
+      z-index: 9999;
       background: rgba(255,255,255,0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -328,6 +540,7 @@
             <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> J2: Finding a specific place (with preferences)</li>
           </ul>
         </li>
+        <li class="text-size-2" style="color: #333; display: flex; align-items: center; gap: 12px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Design decisions &amp; product strategy</li>
       </ul>
     </div>
 
@@ -345,7 +558,7 @@
 
     <div class="slide slide-4 slide-split" data-index="3" data-title="Competition">
       <div class="split-left">
-        <h1>Competition</h1>
+        <h1 class="title-allcaps">Competitors</h1>
         <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
           <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
             <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Advertising <span style="color: #aaa;">(Core revenue engine)</span></span>
@@ -366,7 +579,7 @@
 
     <div class="slide slide-5 slide-split" data-index="4" data-title="Competition: Maps Platform">
       <div class="split-left">
-        <h1>Competition</h1>
+        <h1 class="title-allcaps">Competitors</h1>
         <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
           <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
             <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Maps Platform <span style="color: #aaa;">(B2B API business)</span></span>
@@ -387,7 +600,7 @@
 
     <div class="slide slide-6 slide-split" data-index="5" data-title="Competition: Business Listings">
       <div class="split-left">
-        <h1>Competition</h1>
+        <h1 class="title-allcaps">Competitors</h1>
         <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
           <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
             <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Business Listings / Google Business Profile layer</span>
@@ -409,7 +622,7 @@
 
     <div class="slide slide-7 slide-split" data-index="6" data-title="Competition: Transactions & Bookings">
       <div class="split-left">
-        <h1>Competition</h1>
+        <h1 class="title-allcaps">Competitors</h1>
         <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
           <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
             <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Transactions &amp; bookings</span>
@@ -430,7 +643,7 @@
 
     <div class="slide slide-8 slide-split" data-index="7" data-title="Competition: Mobility & Navigation">
       <div class="split-left">
-        <h1>Competition</h1>
+        <h1 class="title-allcaps">Competitors</h1>
         <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
           <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
             <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Mobility / Navigation / Traffic layer</span>
@@ -445,13 +658,13 @@
         </ol>
       </div>
       <div class="split-right" style="padding: 32px; position: relative;">
-        <img src="applemaps.png" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12);" />
+        <img src="db.webp" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12);" />
       </div>
     </div>
 
     <div class="slide slide-9 slide-split" data-index="8" data-title="Competition: Data & AI">
       <div class="split-left">
-        <h1>Competition</h1>
+        <h1 class="title-allcaps">Competitors</h1>
         <ol style="list-style: none; display: flex; flex-direction: column; gap: 14px;">
           <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
             <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Data &amp; AI layer</span>
@@ -471,41 +684,43 @@
     </div>
 
     <div class="slide slide-10" data-index="9" data-title="Journeys">
-      <h1>Journeys</h1>
-      <ul style="list-style: none; text-align: left; display: flex; flex-direction: column; gap: 20px; max-width: 600px; width: 100%; margin-top: 8px;">
+      <div style="display: inline-flex; flex-direction: column; align-items: flex-start;">
+      <h1 style="text-align: left; margin-bottom: 46px;">Journeys</h1>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 20px; margin-top: 0;">
         <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
-          <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span><strong>J1:</strong>&nbsp;From A to B</span>
+          <span style="display: flex; align-items: center; gap: 10px; background: #fffde6; padding: 6px 12px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span><strong>J1:</strong>&nbsp;From A to B</span>
           <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
             <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> By using public transport</li>
             <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> By walking</li>
           </ul>
         </li>
-        <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px;">
-          <span style="display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span><strong>J2:</strong>&nbsp;Searching for a place</span>
+        <li class="text-size-2" style="color: #333; display: flex; flex-direction: column; gap: 10px; margin-top: 24px;">
+          <span style="display: flex; align-items: center; gap: 10px; background: #fffde6; padding: 6px 12px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span><strong>J2:</strong>&nbsp;Searching for a place</span>
           <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; padding-left: 28px;">
             <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> A laptop-friendly cafe</li>
             <li class="text-size-2" style="color: #666; display: flex; align-items: center; gap: 10px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ccc; flex-shrink: 0;"></span> A public toilet</li>
           </ul>
         </li>
       </ul>
+      </div>
     </div>
 
-    <div class="slide slide-11" data-index="10" data-title="Journey 1">
-      <h1>Journey 1</h1>
+    <div class="slide slide-11" data-index="10" data-title="Journey 1 · A → B">
+      <h1 class="title-allcaps">Journey 1 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; A → B</h1>
       <p class="text-size-2" style="color: #555; max-width: 640px; text-align: center; line-height: 1.5; font-style: italic;">"I want to meet with my friend at a park on Saturday"</p>
     </div>
 
-    <div class="slide slide-12 slide-split" data-index="11" data-title="Journey 1: Push & Pull" data-slide-focus="true" data-focus-step="0" data-focus-total="2">
+    <div class="slide slide-12 slide-split" data-index="11" data-title="Journey 1 · A → B: Push & Pull" data-slide-focus="true" data-focus-step="0" data-focus-total="2">
       <div class="split-left" style="gap: 28px;">
         <div class="focus-section" data-focus-index="0">
-          <h1>Journey 1</h1>
+          <h1 class="title-allcaps" style="margin-bottom: 100px;">Journey 1 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; A → B</h1>
           <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
             <span class="text-size-1" style="font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.08em;">Push</span>
-            <p class="text-size-2" style="color: #333; font-style: italic; line-height: 1.5;">"It's Friday and I want to plan for tomorrow when I should leave home to arrive at around 13:45 – 14:00" <span style="color: #aaa; font-style: normal;">— No hurry, but I want to plan how long earlier I should prepare.</span></p>
+            <p class="text-size-2" style="color: #333; font-style: italic; line-height: 1.5; text-align: left;">"It's Friday and I want to plan for tomorrow when I should leave home to arrive at around 13:45 – 14:00" <span style="color: #aaa; font-style: normal;">— No hurry, but I want to plan how long earlier I should prepare.</span></p>
           </div>
         </div>
         <div class="focus-section" data-focus-index="1" data-blurred="true">
-          <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 36px;">
             <span class="text-size-1" style="font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.08em;">Pulls</span>
             <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
               <li class="text-size-2" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Leave/Arrive feature</li>
@@ -521,9 +736,9 @@
       </div>
     </div>
 
-    <div class="slide slide-13 slide-split" data-index="12" data-title="Journey 1: Alert during transfer" data-slide-focus="true" data-focus-step="0" data-focus-total="4">
+    <div class="slide slide-13 slide-split" data-index="12" data-title="Journey 1 · A → B: Alert during transfer" data-slide-focus="true" data-focus-step="0" data-focus-total="4">
       <div class="split-left" style="gap: 16px;">
-        <h1>Journey 1</h1>
+        <h1 class="title-allcaps">Journey 1 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; A → B</h1>
         <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
           <li class="focus-section text-size-2" data-focus-index="0" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Alert during the transfer</li>
           <li class="focus-section text-size-2" data-focus-index="1" data-blurred="true" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Boarding</li>
@@ -541,9 +756,9 @@
       </div>
     </div>
 
-    <div class="slide slide-14 slide-split" data-index="13" data-title="Journey 1: Ringbahn" data-slide-focus="true" data-focus-step="0" data-focus-total="2">
+    <div class="slide slide-14 slide-split" data-index="13" data-title="Journey 1 · A → B: Ringbahn" data-slide-focus="true" data-focus-step="0" data-focus-total="2">
       <div class="split-left" style="gap: 16px;">
-        <h1>Journey 1</h1>
+        <h1 class="title-allcaps">Journey 1 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; A → B</h1>
         <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
           <li class="focus-section text-size-2" data-focus-index="0" style="color: #333; display: flex; align-items: center; gap: 10px;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #aaa; flex-shrink: 0;"></span> Clockwise or counter-clockwise</li>
         </ul>
@@ -555,8 +770,8 @@
       </div>
     </div>
 
-    <div class="slide slide-15" data-index="14" data-title="Journey 1: Cities" style="flex-direction: column; padding: 48px 56px; justify-content: center;">
-      <h1 style="text-align: left; margin-bottom: 28px;">Journey 1</h1>
+    <div class="slide slide-15" data-index="14" data-title="Journey 1 · A → B: Cities" style="flex-direction: column; padding: 48px 56px; justify-content: center;">
+      <h1 class="title-allcaps" style="text-align: left; margin-bottom: 28px;">Journey 1 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; A → B</h1>
       <div style="display: flex; gap: 24px;">
 
         <!-- Berlin -->
@@ -566,7 +781,7 @@
             <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 40%);"></div>
             <span class="text-size-2" style="position: absolute; top: 20px; left: 0; right: 0; text-align: center; color: #fff; font-weight: 700; letter-spacing: 0.01em;">Berlin</span>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; flex-direction: column; gap: 6px; max-width: 50%; align-self: center; width: 50%;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span class="text-size-1" style="color: #555;">Confidence</span>
               <span class="text-size-1" style="color: #555; font-weight: 600;">High</span>
@@ -584,7 +799,7 @@
             <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 40%);"></div>
             <span class="text-size-2" style="position: absolute; top: 20px; left: 0; right: 0; text-align: center; color: #fff; font-weight: 700; letter-spacing: 0.01em;">Leipzig</span>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; flex-direction: column; gap: 6px; max-width: 50%; align-self: center; width: 50%;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span class="text-size-1" style="color: #555;">Confidence</span>
               <span class="text-size-1" style="color: #555; font-weight: 600;">Moderate</span>
@@ -603,7 +818,7 @@
             <span class="text-size-2" style="position: absolute; top: 20px; left: 0; right: 0; text-align: center; color: #fff; font-weight: 700; letter-spacing: 0.01em;">Ankara</span>
           </div>
           
-          <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; flex-direction: column; gap: 6px; max-width: 50%; align-self: center; width: 50%;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span class="text-size-1" style="color: #555;">Confidence</span>
               <span class="text-size-1" style="color: #555; font-weight: 600;">Low</span>
@@ -617,9 +832,9 @@
       </div>
     </div>
 
-    <div class="slide slide-16 slide-split" data-index="15" data-title="Journey 1: Walking" data-slide-focus="true" data-focus-step="0" data-focus-total="3">
+    <div class="slide slide-16 slide-split" data-index="15" data-title="Journey 1 · A → B: Walking" data-slide-focus="true" data-focus-step="0" data-focus-total="3">
       <div class="split-left" style="gap: 16px;">
-        <h1>Journey 1</h1>
+        <h1 class="title-allcaps">Journey 1 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; A → B</h1>
         <span class="text-size-2" style="color: #333;">Walking</span>
       </div>
       <div class="split-right" style="padding: 32px; position: relative;">
@@ -634,9 +849,9 @@
       </div>
     </div>
 
-    <div class="slide slide-17 slide-split" data-index="16" data-title="Journey 1: Walked 1 hour and its closed!" data-slide-focus="true" data-focus-step="0" data-focus-total="1">
+    <div class="slide slide-17 slide-split" data-index="16" data-title="Journey 1 · A → B: Walked 1 hour and its closed!" data-slide-focus="true" data-focus-step="0" data-focus-total="1">
       <div class="split-left" style="gap: 16px;">
-        <h1>Journey 1</h1>
+        <h1 class="title-allcaps">Journey 1 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; A → B</h1>
         <span class="text-size-2" style="color: #333;">Walked 1 hour and its closed!</span>
       </div>
       <div class="split-right" style="padding: 32px; position: relative;">
@@ -649,7 +864,7 @@
 
     <div class="slide slide-18 slide-split" data-index="17" data-title="Journey 2: Laptop Friendly Cafe" data-slide-focus="true" data-focus-step="0" data-focus-total="1">
       <div class="split-left" style="gap: 16px;">
-        <h1>Journey 2</h1>
+        <h1 class="title-allcaps">Journey 2 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; Finding a place</h1>
         <span class="text-size-2" style="color: #333;">Laptop friendly cafe</span>
       </div>
       <div class="split-right" style="padding: 32px; position: relative;">
@@ -660,25 +875,121 @@
       </div>
     </div>
 
-    <div class="slide slide-19 slide-split" data-index="18" data-title="Journey 2: Toilet!" data-slide-focus="true" data-focus-step="0" data-focus-total="1">
+    <div class="slide slide-19 slide-split" data-index="18" data-title="Journey 2: Toilet!" data-slide-focus="true" data-focus-step="0" data-focus-total="2">
       <div class="split-left" style="gap: 16px;">
-        <h1>Journey 2</h1>
+        <h1 class="title-allcaps">Journey 2 &nbsp;&nbsp;<span style="opacity:0.5">·</span>&nbsp;&nbsp; Finding a place</h1>
         <span class="text-size-2" style="color: #333;">Toilet!</span>
       </div>
       <div class="split-right" style="padding: 32px; position: relative;">
-        <img class="focus-section" data-focus-index="0" src="toilet1.jpg" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12);" />
-        <img class="focus-section" data-focus-index="1" data-blurred="true" src="toilet2.jpg" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12);" />
+        <img class="focus-section" data-focus-index="0" src="toilet.gif" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); transform: scale(3); transform-origin: center;" />
+        <img class="focus-section" data-focus-index="1" data-blurred="true" src="toilet1.jpg" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12);" />
+        <img class="focus-section" data-focus-index="2" data-blurred="true" src="toilet2.jpg" style="position: absolute; max-width: calc(100% - 64px); max-height: calc(100% - 64px); object-fit: contain; border-radius: clamp(12px, 2.5vw, 56px); box-shadow: 0 8px 32px rgba(0,0,0,0.12);" />
+      </div>
+    </div>
+
+    <div class="slide slide-20" data-index="19" data-title="Complexity" style="align-items: center; justify-content: flex-start; padding: 48px 32px; overflow-y: auto;">
+      <h1 style="text-align: center;">Complexity</h1>
+      <table class="complexity-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Examples</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. Physical World</td>
+            <td><div class="sub-items"><span class="pill">Road construction</span><span class="pill">Sidewalk closures</span><span class="pill">New / removed roads</span><span class="pill">Closed station entrances/exits</span><span class="pill">Temporary detours</span><span class="pill">Hills / elevation</span><span class="pill">Parks with ambiguous paths</span><span class="pill">Indoor vs outdoor transitions</span><span class="pill">Large complexes (airports, malls, hospitals)</span><span class="pill">Weather impact</span><span class="pill">Multi-level roads (bridges, tunnels)</span></div></td>
+          </tr>
+          <tr>
+            <td>2. Transit System</td>
+            <td><div class="sub-items"><span class="pill">Delays / cancellations</span><span class="pill">Special schedules (weekends, holidays)</span><span class="pill">Platform/track changes last minute</span><span class="pill">Naming inconsistencies (same stop, different names)</span></div></td>
+          </tr>
+          <tr>
+            <td>3. Routing &amp; Algorithmic</td>
+            <td><div class="sub-items"><span class="pill">Tradeoffs that are not universally "correct"</span><span class="pill">Transfer risk prediction</span><span class="pill">Multiple possible paths</span></div></td>
+          </tr>
+          <tr>
+            <td>4. User Preference</td>
+            <td><div class="sub-items"><span class="pill">Minimize walking</span><span class="pill">Avoid transfers</span><span class="pill">Prefer certain modes (train > bus)</span><span class="pill">Avoid unsafe areas</span><span class="pill">Optimize for comfort, not speed</span></div></td>
+          </tr>
+          <tr>
+            <td>5. Contextual Behavior</td>
+            <td><div class="sub-items"><span class="pill">Late vs relaxed trip</span><span class="pill">Commuting vs exploring</span><span class="pill">Alone vs with kids/luggage</span><span class="pill">Day vs night behavior changes</span></div></td>
+          </tr>
+          <tr>
+            <td>6. UX / Decision-Making</td>
+            <td><div class="sub-items"><span class="pill">Too many options → paralysis</span><span class="pill">Too little info → anxiety</span></div></td>
+          </tr>
+          <tr>
+            <td>7. Business &amp; Policy</td>
+            <td><div class="sub-items"><span class="pill">Data licensing restrictions</span><span class="pill">Transit agency agreements</span></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="slide slide-21" data-index="20" data-title="Design decisions & product strategy" data-slide-focus="true" data-focus-step="0" data-focus-total="1">
+      <div class="slide21-inner">
+      <h1>Design decisions &amp; product strategy</h1>
+      <table class="complexity-table" style="margin-top: 24px;">
+        <thead>
+          <tr>
+            <th>Business Areas</th>
+            <th>Key metric</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Advertising</td>
+            <td><div class="sub-items"><span class="pill">Revenue per search (RPS)</span></div></td>
+          </tr>
+          <tr>
+            <td>Maps Platform</td>
+            <td><div class="sub-items"><span class="pill">API call volume</span></div></td>
+          </tr>
+          <tr>
+            <td>Business Listings</td>
+            <td><div class="sub-items"><span class="pill">Active &amp; claimed businesses (%)</span></div></td>
+          </tr>
+          <tr>
+            <td>Transactions &amp; bookings</td>
+            <td><div class="sub-items"><span class="pill">Gross Merchandise Value (GMV)</span></div></td>
+          </tr>
+          <tr>
+            <td>Mobility / Navigation / Traffic</td>
+            <td><div class="sub-items"><span class="pill">Monthly active navigators</span></div></td>
+          </tr>
+          <tr>
+            <td>Data &amp; AI</td>
+            <td><div class="sub-items"><span class="pill">Prediction accuracy (ETA / ranking)</span></div></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="slide21-right">
+        <div class="media-preview" id="slide21Preview"></div>
+        <div class="gallery-strip">
+          <div class="thumb-wrap"><img src="journey1change.jpg"></div>
+          <div class="thumb-wrap"><img src="journey1-boarding.jpg"></div>
+          <div class="thumb-wrap"><img src="toilet1.jpg"></div>
+          <div class="thumb-wrap"><img src="laptopfriendly2.jpg"></div>
+          <div class="thumb-wrap"><img src="ringbahn3.jpg"></div>
+          <div class="thumb-wrap"><video src="katlar.MP4" muted playsinline style="border-radius: 0;"></video></div>
+        </div>
       </div>
     </div>
 
   </div>
 
+  <div id="popover-backdrop"></div>
   <div class="popover" id="popover"></div>
   <div id="focus-dots"></div>
   <button class="nav-btn" id="navBtn">1 / 13</button>
 
   <script>
     const slidesEl = document.querySelector('.slides');
+    const popoverBackdrop = document.getElementById('popover-backdrop');
     const slides = Array.from(document.querySelectorAll('.slide'));
     const navBtn = document.getElementById('navBtn');
     const popover = document.getElementById('popover');
@@ -700,11 +1011,15 @@
     function openPopover() {
       buildPopover();
       popover.classList.add('open');
+      popoverBackdrop.classList.add('open');
+      slidesEl.classList.add('popover-open');
       popoverOpen = true;
     }
 
     function closePopover() {
       popover.classList.remove('open');
+      popoverBackdrop.classList.remove('open');
+      slidesEl.classList.remove('popover-open');
       popoverOpen = false;
     }
 
@@ -714,6 +1029,7 @@
     });
 
     document.addEventListener('click', () => closePopover());
+    popoverBackdrop.addEventListener('click', () => closePopover());
 
     const focusDotsEl = document.getElementById('focus-dots');
 
@@ -722,12 +1038,18 @@
         focusDotsEl.classList.remove('visible');
         return;
       }
-      const total = parseInt(slide.dataset.focusTotal);
-      const step = parseInt(slide.dataset.focusStep);
+      const mediaFocusSections = Array.from(
+        slide.querySelectorAll('img.focus-section[data-focus-index], video.focus-section[data-focus-index]')
+      );
+      if (mediaFocusSections.length <= 1) {
+        focusDotsEl.classList.remove('visible');
+        return;
+      }
+      const activeIdx = mediaFocusSections.findIndex(m => m.dataset.blurred === 'false');
       focusDotsEl.innerHTML = '';
-      for (let i = 0; i <= total; i++) {
+      for (let i = 0; i < mediaFocusSections.length; i++) {
         const dot = document.createElement('div');
-        dot.className = 'focus-dot' + (i === step ? ' active' : '');
+        dot.className = 'focus-dot' + (i === activeIdx ? ' active' : '');
         focusDotsEl.appendChild(dot);
       }
       if (animate) {
@@ -823,6 +1145,33 @@
         goTo(current - 1);
       }
       if (e.key === 'Escape') closePopover();
+    });
+
+    // Slide 21 gallery preview
+    const slide21El = document.querySelector('.slide-21');
+    const slide21Preview = document.getElementById('slide21Preview');
+
+    slide21El.querySelectorAll('.thumb-wrap').forEach(wrap => {
+      wrap.style.cursor = 'pointer';
+      wrap.addEventListener('click', () => {
+        const img = wrap.querySelector('img');
+        const video = wrap.querySelector('video');
+        slide21Preview.innerHTML = '';
+        if (img) {
+          const el = new Image();
+          el.src = img.src;
+          slide21Preview.appendChild(el);
+        } else if (video) {
+          const el = document.createElement('video');
+          el.src = video.src;
+          el.controls = true;
+          el.autoplay = true;
+          slide21Preview.appendChild(el);
+        }
+        slide21El.querySelectorAll('.thumb-wrap').forEach(w => w.classList.remove('selected'));
+        wrap.classList.add('selected');
+        slide21El.classList.add('preview-open');
+      });
     });
   </script>
 
